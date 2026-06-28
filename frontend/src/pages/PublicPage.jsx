@@ -12,7 +12,7 @@ function formatDate(date) {
 
 // Build a WhatsApp URL for direct contact (no dates)
 function cleanPhone(whatsapp) {
-  return whatsapp.replace(/[^0-9]/g, '');
+  return whatsapp.replace(/[^0-9]/g, '').replace(/^00/, '');
 }
 
 function directWaUrl(whatsapp, carName) {
