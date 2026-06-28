@@ -1,9 +1,10 @@
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const router  = require('express').Router();
-const bcrypt   = require('bcryptjs');
-const jwt      = require('jsonwebtoken');
-const pool     = require('../db');
+const bcrypt  = require('bcryptjs');
+const jwt     = require('jsonwebtoken');
+const pool    = require('../db');
 
-const JWT_SECRET = 'carini_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'carini_secret_key';
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {

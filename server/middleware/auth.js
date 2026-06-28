@@ -1,6 +1,7 @@
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = 'carini_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'carini_secret_key';
 
 module.exports = async (req, res, next) => {
   const header = req.headers.authorization;
