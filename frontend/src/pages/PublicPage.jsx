@@ -53,7 +53,7 @@ export default function PublicPage() {
       <Navbar />
 
       <div className="public-hero">
-        <h1>woo</h1>
+        <h1>Carini</h1>
         <p>Trouvez la voiture idéale pour votre prochain trajet</p>
       </div>
 
