@@ -6,8 +6,8 @@ server/node_modules/
 
 # Build output
 dist/
-frontend/dist/
 .vite/
+# frontend/dist/ est commité pour le déploiement cPanel
 
 # Claude AI
 .claude/

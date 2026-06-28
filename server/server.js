@@ -24,5 +24,12 @@ app.use('/api/cars',    carsRoutes);
 app.use('/api/clients', clientsRoutes);
 app.use('/api/rentals', rentalsRoutes);
 
+// Servir le frontend React en production
+const distPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(distPath));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
