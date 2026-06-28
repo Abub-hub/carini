@@ -11,20 +11,23 @@ function formatDate(date) {
 }
 
 // Build a WhatsApp URL for direct contact (no dates)
-function directWaUrl(whatsapp, carName) {
-  const msg = `Bonjour, je suis intéressé par la voiture : ${carName}. Est-elle disponible ?`;
-  return `https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`;
+function cleanPhone(whatsapp) {
+  return whatsapp.replace(/[^0-9]/g, '');
 }
 
-// Build a WhatsApp URL with rental dates
+function directWaUrl(whatsapp, carName) {
+  const msg = `Bonjour, je suis intéressé par la voiture : ${carName}. Est-elle disponible ?`;
+  return `https://api.whatsapp.com/send?phone=${cleanPhone(whatsapp)}&text=${encodeURIComponent(msg)}`;
+}
+
 function datedWaUrl(whatsapp, carName, dateDebut, dateFin) {
   const msg =
-    `Je suis intéressé par cette voiture :\n\n` +
-    `📌 Voiture : ${carName}\n\n` +
-    `📅 Date de début : ${formatDate(dateDebut)}\n` +
-    `📅 Date de fin : ${formatDate(dateFin)}\n\n` +
-    `❓ Est-elle toujours disponible ?\n\nMerci 😊`;
-  return `https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`;
+    `Bonjour, je suis intéressé par cette voiture :\n\n` +
+    `Voiture : ${carName}\n` +
+    `Date de début : ${formatDate(dateDebut)}\n` +
+    `Date de fin : ${formatDate(dateFin)}\n\n` +
+    `Est-elle disponible pour cette période ?\n\nMerci`;
+  return `https://api.whatsapp.com/send?phone=${cleanPhone(whatsapp)}&text=${encodeURIComponent(msg)}`;
 }
 
 export default function PublicPage() {
@@ -44,7 +47,7 @@ export default function PublicPage() {
   }
 
   function sendWhatsApp() {
-    window.open(datedWaUrl(waModal.whatsapp, waModal.carName, dateDebut, dateFin), '_blank');
+    window.location.href = datedWaUrl(waModal.whatsapp, waModal.carName, dateDebut, dateFin);
     setWaModal(null);
   }
 
@@ -74,7 +77,6 @@ export default function PublicPage() {
               <a
                 className="wa-badge"
                 href={car.whatsapp ? directWaUrl(car.whatsapp, car.carName) : '#'}
-                target={car.whatsapp ? '_blank' : '_self'}
                 rel="noopener noreferrer"
                 onClick={!car.whatsapp ? e => { e.preventDefault(); alert('Numéro WhatsApp non renseigné.'); } : undefined}
               >
