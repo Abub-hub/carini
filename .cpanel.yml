@@ -1,8 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/$USER/carini
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R . $DEPLOYPATH
+    - export DEPLOYPATH=/home/carijbnq/public_html/carini
     - cd $DEPLOYPATH && npm install --omit=dev
-    - cd $DEPLOYPATH/frontend && npm install && npm run build
