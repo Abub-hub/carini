@@ -17,7 +17,7 @@ function cleanPhone(whatsapp) {
 
 function directWaUrl(whatsapp, carName) {
   const msg = `Bonjour, je suis intéressé par la voiture : ${carName}. Est-elle disponible ?`;
-  return `https://api.whatsapp.com/send?phone=${cleanPhone(whatsapp)}&text=${encodeURIComponent(msg)}`;
+  return `https://wa.me/${cleanPhone(whatsapp)}?text=${encodeURIComponent(msg)}`;
 }
 
 function datedWaUrl(whatsapp, carName, dateDebut, dateFin) {
@@ -27,7 +27,7 @@ function datedWaUrl(whatsapp, carName, dateDebut, dateFin) {
     `Date de début : ${formatDate(dateDebut)}\n` +
     `Date de fin : ${formatDate(dateFin)}\n\n` +
     `Est-elle disponible pour cette période ?\n\nMerci`;
-  return `https://api.whatsapp.com/send?phone=${cleanPhone(whatsapp)}&text=${encodeURIComponent(msg)}`;
+  return `https://wa.me/${cleanPhone(whatsapp)}?text=${encodeURIComponent(msg)}`;
 }
 
 export default function PublicPage() {
