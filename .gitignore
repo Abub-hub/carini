@@ -9,8 +9,7 @@ dist/
 .vite/
 # frontend/dist/ est commité pour le déploiement cPanel
 
-# Claude AI
-.claude/
+
 
 # Database files
 *.db

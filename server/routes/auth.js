@@ -3,11 +3,12 @@ const router  = require('express').Router();
 const bcrypt  = require('bcryptjs');
 const jwt     = require('jsonwebtoken');
 const pool    = require('../db');
+const { validate } = require('../schemas');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'carini_secret_key';
 
 // POST /api/auth/register
-router.post('/register', async (req, res) => {
+router.post('/register', validate('register'), async (req, res) => {
   const { name, email, password, whatsapp } = req.body;
   try {
     const hash = await bcrypt.hash(password, 10);
@@ -22,7 +23,7 @@ router.post('/register', async (req, res) => {
 });
 
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', validate('login'), async (req, res) => {
   const { email, password } = req.body;
   try {
     const [rows] = await pool.execute('SELECT * FROM companies WHERE email = ?', [email]);

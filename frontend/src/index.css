@@ -354,3 +354,197 @@ body {
   color: #6b7280;
   line-height: 1;
 }
+
+.modal-wide { max-width: 640px; max-height: 90vh; overflow-y: auto; }
+
+/* ── Field grid (car / client forms) ── */
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0 1rem;
+}
+
+textarea.form-control { resize: vertical; font-family: inherit; }
+
+/* ── Stats ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.stat-value { font-size: 1.5rem; font-weight: 800; color: #111827; }
+.stat-label { font-size: 0.78rem; color: #6b7280; margin-top: 0.2rem; }
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.badge-green { background: #dcfce7; color: #16a34a; }
+.badge-red   { background: #fee2e2; color: #dc2626; }
+.badge-gray  { background: #f3f4f6; color: #6b7280; }
+.badge-blue  { background: #dbeafe; color: #2563eb; }
+
+/* ── Car row thumbnail (dashboard list) ── */
+.car-row-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.car-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── Image manager (add/edit car) ── */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.image-thumb {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+.image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.image-thumb-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.image-add-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.image-add-btn:hover { border-color: #2563eb; color: #2563eb; }
+
+/* ── Public page filters ── */
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 1.25rem 1.5rem 0;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.filters-bar .form-control { width: auto; flex: 1; min-width: 140px; }
+
+/* ── Car card extras ── */
+.car-card { cursor: pointer; }
+
+.car-card-specs { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; }
+
+.spec-pill {
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 10px;
+}
+
+.car-card-price {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.car-card-price span { font-weight: 500; font-size: 0.75rem; color: #6b7280; }
+
+/* ── Carousel ── */
+.carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 8px 8px 0 0;
+}
+
+.carousel-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.45);
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.carousel-arrow-left  { left: 8px; }
+.carousel-arrow-right { right: 8px; }
+
+.carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+}
+
+.carousel-dot.active { background: white; }
