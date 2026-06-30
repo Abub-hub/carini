@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 import Navbar from '../components/Navbar';
 import ImageManager from '../components/ImageManager';
+import { CAR_BRANDS, MODELS_BY_BRAND, COMMON_COLORS, colorHex } from '../carData';
 
 const emptyCarForm = {
-  carName: '', plaque: '', brand: '', model: '', year: '', color: '',
-  fuelType: '', transmission: '', seats: '', mileage: '', dailyPrice: '',
-  status: 'disponible', description: ''
+  brand: '', model: '', year: '', transmission: '', plaque: '',
+  fuelType: '', seats: '', dailyPrice: '', mileage: '', color: ''
 };
 const emptyClientForm = { nom: '', prenom: '', telephone: '', email: '', cin: '', permis: '', address: '' };
 const emptyRentalForm = { car_id: '', client_id: '', dateDebut: '', dateFin: '', deposit: '' };
@@ -61,7 +61,7 @@ export default function Dashboard() {
   async function addCar(e) {
     e.preventDefault(); setError('');
     try {
-      const { data } = await api.post('/cars', carForm);
+      const { data } = await api.post('/cars', { ...carForm, carName: `${carForm.brand} ${carForm.model}`.trim() });
       let car = data;
       if (pendingCarImages.length) {
         const formData = new FormData();
@@ -79,7 +79,7 @@ export default function Dashboard() {
   async function saveEditCar(e) {
     e.preventDefault(); setError('');
     try {
-      const { data } = await api.put(`/cars/${editCar.id}`, editCar);
+      const { data } = await api.put(`/cars/${editCar.id}`, { ...editCar, carName: `${editCar.brand} ${editCar.model}`.trim() });
       setCars(cars.map(c => c.id === editCar.id ? data : c));
       close(); setEditCar(null);
     } catch (err) { setError(err.response?.data?.error || 'Erreur'); }
@@ -202,8 +202,15 @@ export default function Dashboard() {
                       {c.currentlyRented && <span className="badge badge-red">Louée</span>}
                       {c.status === 'disponible' && !c.currentlyRented && <span className="badge badge-green">Disponible</span>}
                     </div>
-                    <div style={{ color: '#6b7280', fontSize: '0.8rem' }}>
-                      {[c.brand, c.model, c.year].filter(Boolean).join(' ')} {c.dailyPrice ? `— ${Number(c.dailyPrice).toFixed(0)} DH/jour` : ''}
+                    <div style={{ color: '#6b7280', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      {c.year}
+                      {c.color && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <span style={{ width: 9, height: 9, borderRadius: '50%', display: 'inline-block', background: colorHex(c.color) || '#d1d5db', border: '1px solid #d1d5db' }} />
+                          {c.color}
+                        </span>
+                      )}
+                      {c.dailyPrice ? `— ${Number(c.dailyPrice).toFixed(0)} DH/jour` : ''}
                     </div>
                   </span>
                 </div>
@@ -380,14 +387,35 @@ export default function Dashboard() {
 
 function CarFields({ form, setForm }) {
   const set = (field) => e => setForm({ ...form, [field]: e.target.value });
+  const models = MODELS_BY_BRAND[form.brand] || [];
+
   return (
     <div className="field-grid">
-      <div className="form-group"><label>Nom</label><input className="form-control" placeholder="Ex : Renault Clio" value={form.carName} onChange={set('carName')} required /></div>
-      <div className="form-group"><label>Plaque</label><input className="form-control" placeholder="AA-123-BB" value={form.plaque} onChange={set('plaque')} required /></div>
-      <div className="form-group"><label>Marque</label><input className="form-control" placeholder="Renault" value={form.brand} onChange={set('brand')} /></div>
-      <div className="form-group"><label>Modèle</label><input className="form-control" placeholder="Clio" value={form.model} onChange={set('model')} /></div>
+      <div className="form-group">
+        <label>Marque</label>
+        <input className="form-control" list="brand-options" placeholder="Ex : Renault" value={form.brand}
+          onChange={e => setForm({ ...form, brand: e.target.value, model: '' })} required />
+        <datalist id="brand-options">
+          {CAR_BRANDS.map(b => <option value={b} key={b} />)}
+        </datalist>
+      </div>
+      <div className="form-group">
+        <label>Modèle</label>
+        <input className="form-control" list="model-options" placeholder="Ex : Clio" value={form.model} onChange={set('model')} required />
+        <datalist id="model-options">
+          {models.map(m => <option value={m} key={m} />)}
+        </datalist>
+      </div>
       <div className="form-group"><label>Année</label><input className="form-control" type="number" min="1980" max="2100" value={form.year} onChange={set('year')} /></div>
-      <div className="form-group"><label>Couleur</label><input className="form-control" value={form.color} onChange={set('color')} /></div>
+      <div className="form-group">
+        <label>Transmission</label>
+        <select className="form-control" value={form.transmission} onChange={set('transmission')}>
+          <option value="">—</option>
+          <option value="Manuelle">Manuelle</option>
+          <option value="Automatique">Automatique</option>
+        </select>
+      </div>
+      <div className="form-group"><label>Plaque d'immatriculation</label><input className="form-control" placeholder="AA-123-BB" value={form.plaque} onChange={set('plaque')} required /></div>
       <div className="form-group">
         <label>Carburant</label>
         <select className="form-control" value={form.fuelType} onChange={set('fuelType')}>
@@ -398,27 +426,36 @@ function CarFields({ form, setForm }) {
           <option value="Électrique">Électrique</option>
         </select>
       </div>
-      <div className="form-group">
-        <label>Transmission</label>
-        <select className="form-control" value={form.transmission} onChange={set('transmission')}>
-          <option value="">—</option>
-          <option value="Manuelle">Manuelle</option>
-          <option value="Automatique">Automatique</option>
-        </select>
-      </div>
       <div className="form-group"><label>Places</label><input className="form-control" type="number" min="1" max="20" value={form.seats} onChange={set('seats')} /></div>
-      <div className="form-group"><label>Kilométrage</label><input className="form-control" type="number" min="0" value={form.mileage} onChange={set('mileage')} /></div>
       <div className="form-group"><label>Prix / jour (DH)</label><input className="form-control" type="number" min="0" step="0.01" value={form.dailyPrice} onChange={set('dailyPrice')} required /></div>
-      <div className="form-group">
-        <label>Statut</label>
-        <select className="form-control" value={form.status} onChange={set('status')}>
-          <option value="disponible">Disponible</option>
-          <option value="maintenance">En maintenance</option>
-        </select>
-      </div>
+      <div className="form-group"><label>Kilométrage</label><input className="form-control" type="number" min="0" value={form.mileage} onChange={set('mileage')} /></div>
       <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-        <label>Description</label>
-        <textarea className="form-control" rows={3} value={form.description} onChange={set('description')} />
+        <label>Couleur</label>
+        <ColorPicker value={form.color} onChange={color => setForm({ ...form, color })} />
+      </div>
+    </div>
+  );
+}
+
+function ColorPicker({ value, onChange }) {
+  const hex = colorHex(value);
+  return (
+    <div>
+      <div className="color-swatches">
+        {COMMON_COLORS.map(c => (
+          <button
+            type="button"
+            key={c.name}
+            title={c.name}
+            className={`color-swatch ${value === c.name ? 'selected' : ''}`}
+            style={{ background: c.hex, border: c.border ? '1px solid #d1d5db' : 'none' }}
+            onClick={() => onChange(c.name)}
+          />
+        ))}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{ width: 16, height: 16, borderRadius: '50%', flexShrink: 0, background: hex || '#f3f4f6', border: '1px solid #d1d5db' }} />
+        <input className="form-control" placeholder="Ou écrire une couleur" value={value} onChange={e => onChange(e.target.value)} />
       </div>
     </div>
   );
